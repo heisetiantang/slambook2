@@ -2,8 +2,10 @@
 #include <cmath>
 
 using namespace std;
-
+// #include <Eigen/ctime>
+//eigen 的核心模块
 #include <Eigen/Core>
+// 稠密矩阵的代数运算（逆，特征值等）
 #include <Eigen/Geometry>
 
 using namespace Eigen;
@@ -17,6 +19,7 @@ int main(int argc, char **argv) {
   Matrix3d rotation_matrix = Matrix3d::Identity();
   // 旋转向量使用 AngleAxis, 它底层不直接是Matrix，但运算可以当作矩阵（因为重载了运算符）
   AngleAxisd rotation_vector(M_PI / 4, Vector3d(0, 0, 1));     //沿 Z 轴旋转 45 度
+  // 保留有效数字3位
   cout.precision(3);
   cout << "rotation matrix =\n" << rotation_vector.matrix() << endl;   //用matrix()转换成矩阵
   // 也可以直接赋值
@@ -24,6 +27,7 @@ int main(int argc, char **argv) {
   // 用 AngleAxis 可以进行坐标变换
   Vector3d v(1, 0, 0);
   Vector3d v_rotated = rotation_vector * v;
+  // v_rotated.transpose()为矩阵的转置
   cout << "(1,0,0) after rotation (by angle axis) = " << v_rotated.transpose() << endl;
   // 或者用旋转矩阵
   v_rotated = rotation_matrix * v;
@@ -35,7 +39,7 @@ int main(int argc, char **argv) {
 
   // 欧氏变换矩阵使用 Eigen::Isometry
   Isometry3d T = Isometry3d::Identity();                // 虽然称为3d，实质上是4＊4的矩阵
-  T.rotate(rotation_vector);                                     // 按照rotation_vector进行旋转
+  T.rotate(rotation_vector);                         // 按照rotation_vector进行旋转
   T.pretranslate(Vector3d(1, 3, 4));                     // 把平移向量设成(1,3,4)
   cout << "Transform matrix = \n" << T.matrix() << endl;
 

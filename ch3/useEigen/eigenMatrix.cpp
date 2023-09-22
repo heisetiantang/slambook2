@@ -20,7 +20,8 @@ int main(int argc, char **argv) {
   // Eigen 中所有向量和矩阵都是Eigen::Matrix，它是一个模板类。它的前三个参数为：数据类型，行，列
   // 声明一个2*3的float矩阵
   Matrix<float, 2, 3> matrix_23;
-
+  Matrix2d matrix_2x2;
+  Matrix2cd matrix_2x2cd;
   // 同时，Eigen 通过 typedef 提供了许多内置类型，不过底层仍是Eigen::Matrix
   // 例如 Vector3d 实质上是 Eigen::Matrix<double, 3, 1>，即三维向量
   Vector3d v_3d;
@@ -34,7 +35,6 @@ int main(int argc, char **argv) {
   // 更简单的
   MatrixXd matrix_x;
   // 这种类型还有很多，我们不一一列举
-
   // 下面是对Eigen阵的操作
   // 输入数据（初始化）
   matrix_23 << 1, 2, 3, 4, 5, 6;
@@ -52,7 +52,7 @@ int main(int argc, char **argv) {
   v_3d << 3, 2, 1;
   vd_3d << 4, 5, 6;
 
-  // 但是在Eigen里你不能混合两种不同类型的矩阵，像这样是错的
+  // 但是在Eigen里你不能混合两种不同类型的矩阵，数据类型要一致
   // Matrix<double, 2, 1> result_wrong_type = matrix_23 * v_3d;
   // 应该显式转换
   Matrix<double, 2, 1> result = matrix_23.cast<double>() * v_3d;
@@ -75,6 +75,25 @@ int main(int argc, char **argv) {
   cout << "times 10: \n" << 10 * matrix_33 << endl;               // 数乘
   cout << "inverse: \n" << matrix_33.inverse() << endl;        // 逆
   cout << "det: " << matrix_33.determinant() << endl;    // 行列式
+                                                         /*
+                                                         transpose
+                                                    vt.
+                                                    调换；移项；颠倒顺序
+                                                    vi.
+                                                    进行变换
+                                                    n.
+                                                    转置阵
+                                                    inverse
+                                                    adj.
+                                                    相反的，倒转的；颠倒的，逆的
+                                                    n.
+                                                    相反（的事物），颠倒（的事物）（the inverse）；（数）反数，倒数；（数）逆元
+                                                         determinant
+                                                         n.
+                                                    <正式> 决定性因素，决定条件；决定子，因子；行列式，方阵
+                                                    adj.
+                                                    决定性的
+                                                          */
 
   // 特征值
   // 实对称矩阵可以保证对角化成功
@@ -101,17 +120,28 @@ int main(int argc, char **argv) {
 
   // 通常用矩阵分解来求，例如QR分解，速度会快很多
   time_stt = clock();
-  x = matrix_NN.colPivHouseholderQr().solve(v_Nd);
+  x = matrix_NN.colPivHouseholderQr().solve(v_Nd); 
   cout << "time of Qr decomposition is "
        << 1000 * (clock() - time_stt) / (double) CLOCKS_PER_SEC << "ms" << endl;
   cout << "x = " << x.transpose() << endl;
-
+ 
   // 对于正定矩阵，还可以用cholesky分解来解方程
   time_stt = clock();
   x = matrix_NN.ldlt().solve(v_Nd);
   cout << "time of ldlt decomposition is "
        << 1000 * (clock() - time_stt) / (double) CLOCKS_PER_SEC << "ms" << endl;
   cout << "x = " << x.transpose() << endl;
+
+// 使用LU 分解法
+     time_stt = clock();
+     x = matrix_NN.lu().solve(v_Nd);
+     cout << "time of lu decomposition is "
+          << 1000 * (clock() - time_stt) / (double) CLOCKS_PER_SEC << "ms" << endl;
+     cout << "x = " << x.transpose() << endl;
+     
+
+
+
 
   return 0;
 }
