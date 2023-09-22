@@ -3,7 +3,12 @@
         {
             "name": "Linux",
             "includePath": [
-                "${workspaceFolder}/**"
+                "${workspaceFolder}/**",
+                "/usr/include/eigen3",
+                "/usr/local/share/sophus",
+                "/usr/local/include/**",
+                "/usr/include/opencv4/opencv2",
+                "/usr/include/opencv4"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/gcc",

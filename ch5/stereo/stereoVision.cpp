@@ -48,7 +48,7 @@ int main(int argc, char **argv) {
             double depth = fx * b / (disparity.at<float>(v, u));
             point[0] = x * depth;
             point[1] = y * depth;
-            point[2] = depth;
+            point[2] = depth; 
 
             pointcloud.push_back(point);
         }
